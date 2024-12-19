@@ -512,18 +512,26 @@ function calculate() {
 
   function calculateG6(income, ipBoxCoeff, F17) {
     if (income - F17 > 93495.6) {
+      // IP Box part calculation
       const ipBoxPart = income * ipBoxCoeff * 0.099;
+
+      // Standard income calculation
       const standardIncome = income * (1 - ipBoxCoeff) - F17;
 
+      // Standard part calculation with threshold check
       const standardPart =
         standardIncome > 1000000
           ? (standardIncome - 1000000) * 0.279 + 0.239 * 1000000
-          : standardIncome * 0.239;
+          : Math.max(standardIncome * 0.239, 0);
 
       return ipBoxPart + standardPart;
     } else if (income > 0) {
+      // IP Box part for lower income
       const ipBoxPart = income * ipBoxCoeff * 0.05;
+
+      // Standard part for lower income with minimum 0
       const standardPart = Math.max(income * (1 - ipBoxCoeff) - F17, 0) * 0.19;
+
       return ipBoxPart + standardPart + 4581.36;
     } else {
       return 4581.36;
