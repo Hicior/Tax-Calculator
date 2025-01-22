@@ -936,3 +936,33 @@ input:focus {
   color: var(--app-text);
   font-size: 16px;
 }
+
+.rates-total-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.rates-c17 {
+    color: var(--app-text-secondary);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.rates-c17-label {
+    color: var(--app-text-secondary);
+    font-size: 14px;
+}
+
+#ratesC17Value {
+    font-weight: 500;
+    color: var(--app-text);
+    font-size: 14px;
+}
+
+.rates-sum {
+    display: flex;
+    align-items: center;
+}

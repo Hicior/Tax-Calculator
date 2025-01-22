@@ -332,19 +332,22 @@ function calculate() {
   previousIncome = income;
   let ipBoxCoeff =
     parseFloat(document.getElementById("ipBoxCoeff").value) / 100;
-  const healthContribLimit = 11600;
+  const healthContribLimit = 11600; // F16, Maksymalna składka zdrowotna do odliczenia podatek liniowy 
   let C16;
-  if (income / 12 <= 7791.3) {
+  if (income / 12 <= 7791.43) {
     C16 = 4581.36;
   } else {
     C16 = 0.049 * income;
   }
   document.getElementById("C16").value = formatPLN(C16);
+
+  // Calculate C17 based on total revenue
   let C17;
   if (revenue > 300000) C17 = 12 * 1258.39;
   else if (revenue > 60000) C17 = 12 * 699.11;
   else C17 = 12 * 419.46;
   document.getElementById("C17").value = formatPLN(C17);
+
   let C18;
   if (income / 12 <= 4242) {
     C18 = 4581.36;
@@ -354,8 +357,28 @@ function calculate() {
   document.getElementById("C18").value = formatPLN(C18);
   let F17 = Math.min(C16, healthContribLimit);
   document.getElementById("F17").value = formatPLN(F17);
-  let F18 = C17 * 0.5;
+
+  // Calculate F18 based on whether we're in multiple rates mode
+  let F18;
+  if (multipleRatesToggle.checked) {
+    // Calculate total allocated revenue for C17
+    let totalAllocatedRevenue = 0;
+    document.querySelectorAll(".rate-input.show").forEach(input => {
+      totalAllocatedRevenue += parsePLN(input.value) || 0;
+    });
+
+    // Calculate C17 based on allocated revenue
+    let ratesC17;
+    if (totalAllocatedRevenue > 300000) ratesC17 = 12 * 1339.60;
+    else if (totalAllocatedRevenue > 60000) ratesC17 = 12 * 744.22;
+    else ratesC17 = 12 * 446.53;
+
+    F18 = ratesC17 * 0.5;
+  } else {
+    F18 = C17 * 0.5;
+  }
   document.getElementById("F18").value = formatPLN(F18);
+
   let J3 = income * (1 - ipBoxCoeff);
 
   function calculateTaxWithSpouseLocal(
@@ -585,55 +608,68 @@ function calculate() {
   }
 
   {
-    let base = getAllocatedOrFullRateValue("C9") - F18;
-    let C9 = base * 0.02 + C17;
+    let base = Math.max(getAllocatedOrFullRateValue("C9") - F18, 0);
+    let C9 = base * 0.02;
+    if (!multipleRatesToggle.checked) C9 += C17;
     document.getElementById("C9").value = formatPLN(C9);
   }
   {
-    let base = getAllocatedOrFullRateValue("D9") - F18;
-    let D9 = base * 0.03 + C17;
+    let base = Math.max(getAllocatedOrFullRateValue("D9") - F18, 0);
+    let D9 = base * 0.03;
+    if (!multipleRatesToggle.checked) D9 += C17;
     document.getElementById("D9").value = formatPLN(D9);
   }
   {
-    let base = getAllocatedOrFullRateValue("E9") - F18;
-    let E9 = base * 0.055 + C17;
+    let base = Math.max(getAllocatedOrFullRateValue("E9") - F18, 0);
+    let E9 = base * 0.055;
+    if (!multipleRatesToggle.checked) E9 += C17;
     document.getElementById("E9").value = formatPLN(E9);
   }
   {
-    let base = getAllocatedOrFullRateValue("F9") - F18;
-    let F9 = base * 0.085 + C17;
+    let base = Math.max(getAllocatedOrFullRateValue("F9") - F18, 0);
+    let F9 = base * 0.085;
+    if (!multipleRatesToggle.checked) F9 += C17;
     document.getElementById("F9").value = formatPLN(F9);
   }
   {
     let allocated = getAllocatedOrFullRateValue("G9");
     let G9;
-    if (allocated <= 100000) G9 = (allocated - F18) * 0.085 + C17;
-    else G9 = (allocated - (F18 + 100000)) * 0.125 + C17 + 8500;
+    if (allocated <= 100000) {
+        G9 = Math.max(allocated - F18, 0) * 0.085;
+    } else {
+        G9 = Math.max(allocated - (F18 + 100000), 0) * 0.125 + 8500;
+    }
+    if (!multipleRatesToggle.checked) G9 += C17;
     document.getElementById("G9").value = formatPLN(G9);
   }
   {
-    let base = getAllocatedOrFullRateValue("C11") - F18;
-    let C11 = base * 0.1 + C17;
+    let base = Math.max(getAllocatedOrFullRateValue("C11") - F18, 0);
+    let C11 = base * 0.1;
+    if (!multipleRatesToggle.checked) C11 += C17;
     document.getElementById("C11").value = formatPLN(C11);
   }
   {
-    let base = getAllocatedOrFullRateValue("D11") - F18;
-    let D11 = base * 0.12 + C17;
+    let base = Math.max(getAllocatedOrFullRateValue("D11") - F18, 0);
+    let D11 = base * 0.12;
+    if (!multipleRatesToggle.checked) D11 += C17;
     document.getElementById("D11").value = formatPLN(D11);
   }
   {
-    let base = getAllocatedOrFullRateValue("E11") - F18;
-    let E11 = base * 0.14 + C17;
+    let base = Math.max(getAllocatedOrFullRateValue("E11") - F18, 0);
+    let E11 = base * 0.14;
+    if (!multipleRatesToggle.checked) E11 += C17;
     document.getElementById("E11").value = formatPLN(E11);
   }
   {
-    let base = getAllocatedOrFullRateValue("F11") - F18;
-    let F11 = base * 0.15 + C17;
+    let base = Math.max(getAllocatedOrFullRateValue("F11") - F18, 0);
+    let F11 = base * 0.15;
+    if (!multipleRatesToggle.checked) F11 += C17;
     document.getElementById("F11").value = formatPLN(F11);
   }
   {
-    let base = getAllocatedOrFullRateValue("G11") - F18;
-    let G11 = base * 0.17 + C17;
+    let base = Math.max(getAllocatedOrFullRateValue("G11") - F18, 0);
+    let G11 = base * 0.17;
+    if (!multipleRatesToggle.checked) G11 += C17;
     document.getElementById("G11").value = formatPLN(G11);
   }
 
@@ -670,26 +706,38 @@ function calculate() {
     }
   });
 
-  ryczaltCheckboxes.forEach((checkbox) => {
-    if (checkbox.checked) {
-      const targetId = checkbox.dataset.target;
-      const targetInput = document.getElementById(targetId);
-      if (targetInput.closest(".input-group").style.display !== "none") {
-      }
-    }
-  });
-
-  updateRatesTotal();
+  updateRatesTotal(C17);
 }
 
-function updateRatesTotal() {
+function updateRatesTotal(C17) {
   const ratesTotalElement = document.getElementById("ratesTotal");
   const ratesTotalValueElement = document.getElementById("ratesTotalValue");
+  const ratesC17ValueElement = document.getElementById("ratesC17Value");
 
   if (!multipleRatesToggle.checked) {
     ratesTotalElement.classList.add("hidden");
     return;
   }
+
+  // Check if any rate checkbox is selected
+  const anyRateSelected = Array.from(ryczaltCheckboxes).some(checkbox => checkbox.checked);
+  
+  if (!anyRateSelected) {
+    ratesTotalElement.classList.add("hidden");
+    return;
+  }
+
+  // Calculate total allocated revenue
+  let totalAllocatedRevenue = 0;
+  document.querySelectorAll(".rate-input.show").forEach(input => {
+    totalAllocatedRevenue += parsePLN(input.value) || 0;
+  });
+
+  // Calculate C17 based on allocated revenue
+  let ratesC17;
+  if (totalAllocatedRevenue > 300000) ratesC17 = 12 * 1339.60;
+  else if (totalAllocatedRevenue > 60000) ratesC17 = 12 * 744.22;
+  else ratesC17 = 12 * 446.53;
 
   const rateIds = [
     "C9",
@@ -712,12 +760,9 @@ function updateRatesTotal() {
     }
   });
 
-  if (total > 0) {
-    ratesTotalElement.classList.remove("hidden");
-    ratesTotalValueElement.textContent = formatPLN(total);
-  } else {
-    ratesTotalElement.classList.add("hidden");
-  }
+  ratesTotalElement.classList.remove("hidden");
+  ratesC17ValueElement.textContent = formatPLN(ratesC17);
+  ratesTotalValueElement.textContent = formatPLN(total + ratesC17);
 }
 
 // Event listeners
@@ -857,60 +902,57 @@ document
     updateRatesTotal();
   });
 
+// Event listener for rate checkboxes
 ryczaltCheckboxes.forEach((checkbox) => {
-  checkbox.addEventListener("change", function () {
-    const targetId = this.dataset.target;
-    const targetInput = document.getElementById(targetId);
-    const targetGroup = targetInput.closest(".input-group");
-    const rateInput =
-      this.closest(".checkbox-wrapper").querySelector(".rate-input");
-    const multipleRatesEnabled = multipleRatesToggle.checked;
-    if (this.checked) {
-      targetGroup.style.display = "flex";
-      if (multipleRatesEnabled) {
-        rateInput.classList.add("show");
-        rateInput.value = "";
-        targetInput.value = formatPLN(0);
-      }
-    } else {
-      targetGroup.style.display = "none";
-      rateInput.classList.remove("show");
-      rateInput.value = "";
-      targetInput.value = formatPLN(0);
-    }
-    const anyChecked = Array.from(ryczaltCheckboxes).some((cb) => cb.checked);
-    ryczaltMessage.style.display = anyChecked ? "none" : "block";
-    if (multipleRatesEnabled) updateRemainingRevenue();
-  });
+    checkbox.addEventListener("change", function () {
+        const targetId = this.dataset.target;
+        const targetInput = document.getElementById(targetId);
+        const targetGroup = targetInput.closest(".input-group");
+        const rateInput = this.closest(".checkbox-wrapper").querySelector(".rate-input");
+        const multipleRatesEnabled = multipleRatesToggle.checked;
+        
+        if (this.checked) {
+            targetGroup.style.display = "flex";
+            if (multipleRatesEnabled) {
+                rateInput.classList.add("show");
+                rateInput.value = "";
+                targetInput.value = formatPLN(0);
+            }
+        } else {
+            targetGroup.style.display = "none";
+            rateInput.classList.remove("show");
+            rateInput.value = "";
+            targetInput.value = formatPLN(0);
+        }
+        
+        const anyChecked = Array.from(ryczaltCheckboxes).some((cb) => cb.checked);
+        ryczaltMessage.style.display = anyChecked ? "none" : "block";
+        
+        if (!resultsSection.classList.contains("hidden")) {
+            calculate();
+        }
+        
+        if (multipleRatesEnabled) {
+            updateRemainingRevenue();
+        }
+    });
 });
 
+// Event listeners for rate inputs
 document.querySelectorAll(".rate-input").forEach((input) => {
-  input.addEventListener("input", (e) => {
-    if (!e.target.value) return;
-    const isValid = validateInput(e.target.value, e.target.dataset.for);
-    if (!resultsSection.classList.contains("hidden") && isValid) calculate();
-    if (multipleRatesToggle.checked) updateRemainingRevenue();
-  });
-  input.addEventListener("blur", (e) => {
-    if (e.target.value) {
-      e.target.value = formatPLN(parsePLN(e.target.value));
-      updateRemainingRevenue();
-    }
-  });
-  input.addEventListener("focus", (e) => {
-    e.target.select();
-  });
-});
-
-spouseIncomeInput.addEventListener("input", (e) => {
-  if (!spouseIncomeCard.classList.contains("inactive")) {
-    const isValid = validateInput(e.target.value, "spouseIncome");
-    if (!resultsSection.classList.contains("hidden") && isValid) calculate();
-  }
-});
-spouseIncomeInput.addEventListener("blur", (e) => {
-  if (!spouseIncomeCard.classList.contains("inactive")) {
-    e.target.value = formatPLN(parsePLN(e.target.value));
-    calculate();
-  }
+    input.addEventListener("input", (e) => {
+        if (!e.target.value) return;
+        const isValid = validateInput(e.target.value, e.target.dataset.for);
+        if (!resultsSection.classList.contains("hidden") && isValid) calculate();
+        if (multipleRatesToggle.checked) updateRemainingRevenue();
+    });
+    input.addEventListener("blur", (e) => {
+        if (e.target.value) {
+            e.target.value = formatPLN(parsePLN(e.target.value));
+            updateRemainingRevenue();
+        }
+    });
+    input.addEventListener("focus", (e) => {
+        e.target.select();
+    });
 });
