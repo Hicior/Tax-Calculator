@@ -347,9 +347,9 @@ function calculate() {
 
   // Calculate C17 based on total revenue
   let C17;
-  if (revenue > 300000) C17 = 12 * 1339.60;
-  else if (revenue > 60000) C17 = 12 * 744.22;
-  else C17 = 12 * 446.53;
+  if (revenue > 300000) C17 = 12 * 1384.97;
+  else if (revenue > 60000) C17 = 12 * 769.43;
+  else C17 = 12 * 461.66;
   document.getElementById("C17").value = formatPLN(C17);
 
   let C18;
