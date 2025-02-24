@@ -6,7 +6,7 @@
     <title>Uproszczony Kalkulator Podatkowy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">    
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">    
     <link rel="stylesheet" href="TaxCalculator-web.css">
 </head>
 <body>
@@ -35,13 +35,11 @@
                 <label>Przychód</label>
                 <input type="text" id="revenue" value="">
                 <span class="error-message" id="revenue-error"></span>
-                <span class="initial-value" id="revenue-initial"></span>
             </div>
             <div class="input-group">
                 <label>Koszty</label>
                 <input type="text" id="costs" value="">
                 <span class="error-message" id="costs-error"></span>
-                <span class="initial-value" id="costs-initial"></span>
             </div>
         </div>
 
@@ -228,18 +226,32 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Add these hidden inputs -->
-            <div style="display: none;">
-                <input type="text" id="C16" readonly>
-                <input type="text" id="C17" readonly>
-                <input type="text" id="C18" readonly>
-                <input type="text" id="F16" readonly>
-                <input type="text" id="F17" readonly>
-                <input type="text" id="F18" readonly>
+        </div>
+        <div class="consultation-section hidden" id="consultationSection">
+            <h2>Potrzebujesz profesjonalnej porady?</h2>
+            <h1>Pomożemy Ci wybrać najlepszą formę opodatkowania!</h1>
+            <div class="consultation-content">
+                <div class="consultation-text">
+                    <p>Nasi doradcy podatkowi pomogą Ci wybrać najkorzystniejszą formę opodatkowania i przeprowadzą Cię przez wszystkie formalności. Umów się na konsultację online i zyskaj pewność, że Twoje podatki są w dobrych rękach.</p>
+                    <a href="https://mentzen.pl/konsultacje-online/" class="consultation-button" target="_blank">
+                        Umów konsultację
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" style="margin-left: 4px">
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="consultation-image">
+                    <img src="https://mentzen.pl/wp-content/uploads/2025/02/Pracownicy-kancelarii-Mentzen-przy-stole.webp" alt="Zespół doradców podatkowych Kancelarii Mentzen">
+                </div>
             </div>
         </div>
         <div class="legal-disclaimer" id="legalDisclaimer">
+            <div class="legal-disclaimer-header">
+                <svg class="legal-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-8m0-18H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8m0-18v18m-4-8h4m-4-4h4"/>
+                </svg>
+                <h3>Notka prawna</h3>
+            </div>
             <p>Uproszczony Kalkulator Podatkowy ma wyłącznie charakter informacyjny; wyniki uzyskane za jego pomocą nie są obowiązujące i nie mogą stanowić podstawy jakichkolwiek roszczeń wobec Kancelarii Mentzen Sp. z o.o. Informacje otrzymane dzięki jego wykorzystaniu nie są sugestią, poradą prawną, inwestycyjną ani doradztwem podatkowym. Faktyczna sytuacja podatnika może różnić się w poszczególnych przypadkach, szczególnie w zależności od specyficznych okoliczności faktycznych, prawnych i finansowych. Kancelaria Mentzen Sp. z o.o. nie odpowiada za jakiekolwiek straty lub szkody wynikłe z korzystania z tego narzędzia lub z nim związane.</p>
         </div>
     </div>
