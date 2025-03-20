@@ -68,14 +68,12 @@ section.consultation {
   display: flex;
   justify-content: center;
   padding: 100px 10px 60px 10px;
-  background-color: var(--app-background-silver);
 }
 
 section.l-discaimer {
   display: flex;
   justify-content: center;
   padding: 40px 10px;
-  background-color: var(--app-background-silver);
 }
 
 .calculator-container {
